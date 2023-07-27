@@ -6,7 +6,6 @@ import (
 	"github.com/kysion/oss-library/internal/logic/oss"
 
 	"github.com/gogf/gf/v2/i18n/gi18n"
-	"github.com/gogf/gf/v2/text/gstr"
 	"github.com/kysion/oss-library/internal/boot"
 	"github.com/kysion/oss-library/internal/logic/oss_aliyun"
 	"github.com/kysion/oss-library/oss_consts"
@@ -65,7 +64,8 @@ func (m *Modules) SetI18n(i18n *gi18n.Manager) error {
 	if i18n == nil {
 		i18n = gi18n.New()
 		i18n.SetLanguage("zh-CN")
-		err := i18n.SetPath("i18n/" + gstr.ToLower(m.conf.KeyIndex))
+		//err := i18n.SetPath("i18n/" + gstr.ToLower(m.conf.KeyIndex))
+		err := i18n.SetPath("i18n/" + m.conf.I18nName)
 		if err != nil {
 			return err
 		}
