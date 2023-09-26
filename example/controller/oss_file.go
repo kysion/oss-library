@@ -65,6 +65,6 @@ func (c *OssFileController) DeleteFileList(ctx context.Context, req *oss_v1.Dele
 }
 
 // QueryFiles 列举文件  列举指定存储空间（Bucket）下的所有文件（Object）、指定前缀的文件、指定目录下的文件和子目录("/")
-func (c *OssFileController) QueryFiles(ctx context.Context, req *oss_v1.QueryFilesReq) ([]oss_model.ObjectInfoRes, error) {
+func (c *OssFileController) QueryFiles(ctx context.Context, req *oss_v1.QueryFilesReq) (oss_model.ObjectInfoListRes, error) {
 	return c.IOssFile.QueryFiles(ctx, &req.QueryFilesReq)
 }

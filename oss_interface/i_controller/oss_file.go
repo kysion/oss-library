@@ -25,5 +25,5 @@ type IOssFile interface {
 
 	DeleteFileList(ctx context.Context, req *oss_api.DeleteFileListReq) (res oss_api.BoolRes, err error)
 
-	QueryFiles(ctx context.Context, req *oss_api.QueryFilesReq) ([]oss_model.ObjectInfoRes, error)
+	QueryFiles(ctx context.Context, req *oss_api.QueryFilesReq) (oss_model.ObjectInfoListRes, error)
 }

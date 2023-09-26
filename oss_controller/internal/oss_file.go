@@ -155,7 +155,7 @@ func (c *OssFileController) DeleteFile(ctx context.Context, req *oss_api.DeleteF
 	case oss_enum.Oss.Type.Tencent.Code():
 
 	case oss_enum.Oss.Type.Qiniu.Code():
-		
+
 	case oss_enum.Oss.Type.Minio.Code():
 	case oss_enum.Oss.Type.Huawei.Code():
 	case oss_enum.Oss.Type.Local.Code():
@@ -186,7 +186,7 @@ func (c *OssFileController) DeleteFileList(ctx context.Context, req *oss_api.Del
 }
 
 // QueryFiles 列举文件  列举指定存储空间（Bucket）下的所有文件（Object）、指定前缀的文件、指定目录下的文件和子目录("/")
-func (c *OssFileController) QueryFiles(ctx context.Context, req *oss_api.QueryFilesReq) (res []oss_model.ObjectInfoRes, err error) {
+func (c *OssFileController) QueryFiles(ctx context.Context, req *oss_api.QueryFilesReq) (res oss_model.ObjectInfoListRes, err error) {
 	var ret []oss_model.ObjectInfoRes
 	switch req.ProviderNo {
 	case oss_enum.Oss.Type.Aliyun.Code():
