@@ -2,7 +2,6 @@ package oss_modules
 
 import (
 	"context"
-	"github.com/kysion/base-library/utility/base_permission"
 	"github.com/kysion/oss-library/internal/logic/oss"
 
 	"github.com/gogf/gf/v2/i18n/gi18n"
@@ -97,7 +96,7 @@ func NewModules(
 	module.ossAliyun = oss_aliyun.NewOssAliyun(module)
 
 	// 权限树追加权限
-	oss_consts.PermissionTree = append(oss_consts.PermissionTree, boot.InitPermission(module, base_permission.Factory())...)
+	oss_consts.PermissionTree = append(oss_consts.PermissionTree, boot.InitPermission(module, nil)...)
 
 	return module
 }

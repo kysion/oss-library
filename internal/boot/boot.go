@@ -8,6 +8,14 @@ import (
 
 // InitPermission 初始化权限树
 func InitPermission(module oss_interface.IModules, permission base_permission.IPermission) []base_permission.IPermission {
+	if base_permission.Factory == nil {
+		return nil
+	}
+
+	if permission == nil {
+		permission = base_permission.Factory()
+	}
+
 	result := []base_permission.IPermission{
 		// OSS
 		permission.
