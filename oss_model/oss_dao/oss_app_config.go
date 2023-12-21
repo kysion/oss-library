@@ -9,8 +9,12 @@ import (
 	"github.com/kysion/oss-library/oss_model/oss_dao/internal"
 )
 
-type OssAppConfig = dao_interface.TIDao[internal.OssAppConfigColumns]
+type OssAppConfigDao = dao_interface.TIDao[internal.OssAppConfigColumns]
 
-func NewOssAppConfig(dao ...dao_interface.IDao) OssAppConfig {
-	return (OssAppConfig)(internal.NewOssAppConfigDao(dao...))
+func NewOssAppConfig(dao ...dao_interface.IDao) OssAppConfigDao {
+	return (OssAppConfigDao)(internal.NewOssAppConfigDao(dao...))
 }
+
+var (
+	OssAppConfig = NewOssAppConfig()
+)
