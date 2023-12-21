@@ -9,8 +9,12 @@ import (
 	"github.com/kysion/oss-library/oss_model/oss_dao/internal"
 )
 
-type OssServiceProviderConfig = dao_interface.TIDao[internal.OssServiceProviderConfigColumns]
+type OssServiceProviderConfigDao = dao_interface.TIDao[internal.OssServiceProviderConfigColumns]
 
-func NewOssServiceProviderConfig(dao ...dao_interface.IDao) OssServiceProviderConfig {
-	return (OssServiceProviderConfig)(internal.NewOssServiceProviderConfigDao(dao...))
+func NewOssServiceProviderConfig(dao ...dao_interface.IDao) OssServiceProviderConfigDao {
+	return (OssServiceProviderConfigDao)(internal.NewOssServiceProviderConfigDao(dao...))
 }
+
+var (
+	OssServiceProviderConfig = NewOssServiceProviderConfig()
+)

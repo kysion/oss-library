@@ -15,14 +15,16 @@ gfcli:
     dao:
       - link: "pgsql:user=username password=password host=127.0.0.1 port=5432 dbname=dn_name sslmode=disable"
         tables: "oss_app_config, oss_bucket_config, oss_service_provider_config "
-        daoPath: "model/dao"
-        doPath: "model/do"
-        entityPath: "model/entity"
+        daoPath: "../oss_model/oss_dao"
+        doPath: "../oss_model/oss_do"
+        entityPath: "../oss_model/oss_entity"
+
         tplDaoIndexPath: "hack/tpls/dao_template.tpl"
         tplDaoInternalPath: "hack/tpls/dao_internal_template.tpl"
-        tplDaoDoPath: "hack/tpls/do_template"
-        tplDaoEntityPath: "hack/tpls/entity_template"
-        dstFolder: "sys_service"
+        tplDaoDoPath: "hack/tpls/do_template.tpl"
+        tplDaoEntityPath: "hack/tpls/entity_template.tpl"
+
+        dstFolder: "../oss_service"
 
         descriptionTag:  true
         noModelComment:  true

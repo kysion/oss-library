@@ -9,8 +9,12 @@ import (
 	"github.com/kysion/oss-library/oss_model/oss_dao/internal"
 )
 
-type OssBucketConfig = dao_interface.TIDao[internal.OssBucketConfigColumns]
+type OssBucketConfigDao = dao_interface.TIDao[internal.OssBucketConfigColumns]
 
-func NewOssBucketConfig(dao ...dao_interface.IDao) OssBucketConfig {
-	return (OssBucketConfig)(internal.NewOssBucketConfigDao(dao...))
+func NewOssBucketConfig(dao ...dao_interface.IDao) OssBucketConfigDao {
+	return (OssBucketConfigDao)(internal.NewOssBucketConfigDao(dao...))
 }
+
+var (
+	OssBucketConfig = NewOssBucketConfig()
+)
