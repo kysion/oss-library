@@ -56,4 +56,5 @@ type OssServiceProviderConfigListRes oss_model.OssServiceProviderListRes
 type OssBucketConfigRes oss_model.OssBucketConfig
 
 type BoolRes bool
+type StringRes string
 type IntRes int

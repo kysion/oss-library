@@ -70,3 +70,25 @@ func (s *sBucketConfig) CreateBucket(ctx context.Context, info *oss_model.OssBuc
 
 	return true, nil
 }
+
+// GetByBucketNameAndProviderNo 根据渠道商编号和Bucket存储对象名称获取存储对象
+func (s *sBucketConfig) GetByBucketNameAndProviderNo(ctx context.Context, bucketName, providerNo string, state ...int) (*oss_model.OssBucketConfig, error) {
+	if bucketName == "" {
+		return nil, errors.New("存储对象Name不能为空" + s.dao.OssBucketConfig.Table())
+	}
+
+	data := oss_entity.OssBucketConfig{}
+	model := s.dao.OssBucketConfig.Ctx(ctx).Where(oss_do.OssBucketConfig{BucketName: bucketName, ProviderNo: providerNo})
+	if len(state) > 0 {
+		model = model.Where(oss_do.OssBucketConfig{State: state})
+	}
+
+	err := model.Scan(&data)
+	if err != nil {
+		return nil, errors.New("根据渠道商编号和Bucket存储对象名称获取存储对象失败：" + err.Error() + s.dao.OssBucketConfig.Table())
+	}
+
+	res := kconv.Struct[*oss_model.OssBucketConfig](data, &oss_model.OssBucketConfig{})
+
+	return res, nil
+}

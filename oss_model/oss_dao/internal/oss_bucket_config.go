@@ -25,18 +25,19 @@ type OssBucketConfigDao struct {
 type OssBucketConfigColumns struct {
 	Id            string //
 	BucketName    string // 存储空间名称
-	Endpoint      string // bucket调用域名
+	Endpoint      string // Bucket 的地域域名
 	StorageType   string // 存储类型
 	RedundantType string // 冗余类型
 	MonthlyFlow   string // 当月流量
 	VisitsNum     string // 访问次数
 	UnionMainId   string // 主体ID
-	OwnerId       string // 拥有者ID
+	OwnerId       string // 拥有者ID，（阿里云OSS：阿里云账号的APPID、）
 	CreatedAt     string //
 	UpdatedAt     string //
 	DeletedAt     string //
 	ProviderNo    string // 渠道商编号
 	State         string // 状态：0禁用 1正常
+	BucketDomain  string // Bucket的访问域名
 }
 
 // ossBucketConfigColumns holds the columns for table oss_bucket_config.
@@ -55,6 +56,7 @@ var ossBucketConfigColumns = OssBucketConfigColumns{
 	DeletedAt:     "deleted_at",
 	ProviderNo:    "provider_no",
 	State:         "state",
+	BucketDomain:  "bucket_domain",
 }
 
 // NewOssBucketConfigDao creates and returns a new DAO object for table data access.

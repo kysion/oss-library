@@ -58,3 +58,15 @@ type QueryFilesReq struct {
 
 	oss_api.QueryFilesReq
 }
+
+type GetFileSingURLReq struct {
+	g.Meta `method:"post" summary:"获取文件访问URL" tags:"Oss文件"`
+
+	oss_api.GetFileSingURLReq
+}
+
+type GetObjectToFileWithURLReq struct {
+	g.Meta `method:"post" summary:"根据文件访问URL获取文件" tags:"Oss文件"`
+
+	oss_api.GetObjectToFileWithURLReq
+}

@@ -25,7 +25,7 @@ func OssGroup(modules oss_interface.IModules, group *ghttp.RouterGroup) *ghttp.R
 	group.POST(routePrefix+"/getAppConfigById", controller.GetAppConfigById)
 	group.POST(routePrefix+"/createAppConfig", controller.CreateAppConfig)
 	group.POST(routePrefix+"/getAppAvailableNumber", controller.GetAppAvailableNumber)
-	
+
 	// group.POST(routePrefix+"/updateAppNumber", controller.UpdateAppNumber)
 
 	group.POST(routePrefix+"/registerBucket", controller.RegisterBucket)
@@ -47,6 +47,8 @@ func OssFileGroup(modules oss_interface.IModules, group *ghttp.RouterGroup) *ght
 	group.POST(routePrefix+"/deleteFile", controller.DeleteFile)
 	group.POST(routePrefix+"/deleteFileList", controller.DeleteFileList)
 	group.POST(routePrefix+"/queryFiles", controller.QueryFiles)
+	group.POST(routePrefix+"/getFileSingURL", controller.GetFileSingURL)
+	group.POST(routePrefix+"/getObjectToFileWithURL", controller.GetObjectToFileWithURL)
 
 	return group
 

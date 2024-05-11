@@ -40,4 +40,12 @@ type QueryFilesReq struct {
 	oss_model.QueryFileListReq
 }
 
+type GetFileSingURLReq struct {
+	oss_model.GetFileSingURL
+}
+
+type GetObjectToFileWithURLReq struct {
+	oss_model.GetObjectToFileWithURL
+}
+
 type ByteRes []byte

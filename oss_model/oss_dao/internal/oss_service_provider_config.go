@@ -29,8 +29,7 @@ type OssServiceProviderConfigColumns struct {
 	AccessKeyId     string // 身份标识
 	AccessKeySecret string // 身份认证密钥
 	Token           string // 安全令牌
-	BasePath        string // 域名
-	Endpoint        string // bucket调用域名
+	Endpoint        string // Bucket的地域域名
 	Remark          string // 备注
 	Status          string // 状态：0禁用 1启用
 	ExtJson         string // 拓展字段
@@ -38,6 +37,7 @@ type OssServiceProviderConfigColumns struct {
 	CreatedAt       string //
 	UpdatedAt       string //
 	DeletedAt       string //
+	Priority        string // 优先级，使用默认选择优先级最高的
 }
 
 // ossServiceProviderConfigColumns holds the columns for table oss_service_provider_config.
@@ -48,7 +48,6 @@ var ossServiceProviderConfigColumns = OssServiceProviderConfigColumns{
 	AccessKeyId:     "access_key_id",
 	AccessKeySecret: "access_key_secret",
 	Token:           "token",
-	BasePath:        "base_path",
 	Endpoint:        "endpoint",
 	Remark:          "remark",
 	Status:          "status",
@@ -57,6 +56,7 @@ var ossServiceProviderConfigColumns = OssServiceProviderConfigColumns{
 	CreatedAt:       "created_at",
 	UpdatedAt:       "updated_at",
 	DeletedAt:       "deleted_at",
+	Priority:        "priority",
 }
 
 // NewOssServiceProviderConfigDao creates and returns a new DAO object for table data access.

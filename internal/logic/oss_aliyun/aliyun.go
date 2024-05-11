@@ -195,6 +195,33 @@ func (s *sOssAliyun) PartPutDownload(ctx context.Context, info *oss_model.PartPu
 	return err == nil, err
 }
 
+// GetObject 获取文件
+func (s *sOssAliyun) GetObject(ctx context.Context, info *oss_model.GetFile) ([]byte, error) {
+	// 创建存储空间Bucket
+	bucket, err := s.CreateBucket(ctx, info.MustInfo)
+	if err != nil {
+		return nil, err
+	}
+
+	// 获取文件
+	object, err := bucket.GetObject(info.BucketName)
+	if err != nil {
+		return nil, errors.New("获取文件失败" + err.Error() + s.category)
+	}
+	defer object.Close()
+
+	// 读取文件内容
+	buf := make([]byte, 0)
+	n, err := object.Read(buf)
+	if err != nil || n == 0 {
+		return nil, errors.New("读取文件内容失败" + err.Error() + s.category)
+	}
+
+	fmt.Println(string(buf))
+
+	return buf, err
+}
+
 // GetFile 上传并获取文件 (OSS仅支持查询CSV文件和JSON文件)
 func (s *sOssAliyun) GetFile(ctx context.Context, info *oss_model.GetFile) ([]byte, error) {
 	// 创建存储空间Bucket
@@ -340,4 +367,44 @@ func (s *sOssAliyun) CreateBucket(ctx context.Context, info oss_model.MustInfo) 
 	}
 
 	return bucket, nil
+}
+
+// GetObjectToFileWithURL 根据URL获取存储对象
+func (s *sOssAliyun) GetObjectToFileWithURL(ctx context.Context, info oss_model.GetObjectToFileWithURL) (bool, error) {
+	// 创建存储空间Bucket
+	bucket, err := s.CreateBucket(ctx, info.MustInfo)
+	if err != nil {
+		return false, err
+	}
+
+	// 填写步骤1获取的签名URL。
+	signedURL := info.SingUrl
+	// 使用签名URL将OSS文件下载到本地文件。
+	err = bucket.GetObjectToFileWithURL(signedURL, info.FilePath)
+	if err != nil {
+		return false, errors.New("根据文件访问URL下载文件失败了！" + err.Error() + s.category)
+	}
+
+	return err == nil, err
+}
+
+// GetFileSingURL 获取文件的签名访问URL
+func (s *sOssAliyun) GetFileSingURL(ctx context.Context, info *oss_model.GetFileSingURL) (string, error) {
+	// 创建存储空间Bucket
+	bucket, err := s.CreateBucket(ctx, info.MustInfo)
+	if err != nil {
+		return "", err
+	}
+
+	// 填写文件完整路径，例如exampledir/exampleobject.txt。文件完整路径中不能包含Bucket名称。
+	objectName := info.ObjectKey
+
+	// 生成用于下载的签名URL，并指定签名URL的有效时间为60秒。
+	signedURL, err := bucket.SignURL(objectName, oss.HTTPGet, info.ExpiredInSec)
+	if err != nil {
+		return "", errors.New("获取文件的签名访问URL失败:" + err.Error())
+	}
+	fmt.Printf("Sign Url:%s\n", signedURL)
+
+	return signedURL, nil
 }

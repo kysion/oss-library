@@ -18,8 +18,7 @@ type OssServiceProviderConfig struct {
 	AccessKeyId     interface{} // 身份标识
 	AccessKeySecret interface{} // 身份认证密钥
 	Token           interface{} // 安全令牌
-	BasePath        interface{} // 域名
-	Endpoint        interface{} // bucket调用域名
+	Endpoint        interface{} // Bucket的地域域名
 	Remark          interface{} // 备注
 	Status          interface{} // 状态：0禁用 1启用
 	ExtJson         interface{} // 拓展字段
@@ -27,4 +26,5 @@ type OssServiceProviderConfig struct {
 	CreatedAt       *gtime.Time //
 	UpdatedAt       *gtime.Time //
 	DeletedAt       *gtime.Time //
+	Priority        interface{} // 优先级，使用默认选择优先级最高的
 }

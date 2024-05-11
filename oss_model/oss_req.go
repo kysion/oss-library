@@ -67,12 +67,26 @@ type DownLoadFile struct {
 	ContentEncoding string `json:"contentEncoding" dc:"压缩格式"`
 }
 
+// GetObjectToFileWithURL 根据路径下载文件
+type GetObjectToFileWithURL struct {
+	MustInfo
+	FilePath string `json:"filePath"  dc:"本地存储的文件路径"`
+	SingUrl  string `json:"singUrl" dc:"文件URL"`
+}
+
+// GetFileSingURL 根据路径下载文件
+type GetFileSingURL struct {
+	MustInfo
+	ObjectKey    string `json:"objectKey" dc:"存储文件key"`
+	ExpiredInSec int64  `json:"expiredInSec" dc:"URL过期时间，单位为秒"`
+}
+
 // GetFile 查询文件
 type GetFile struct {
 	MustInfo
 	ObjectKey string `json:"objectKey" dc:"等同于objectName"`
-	LocalPath string `json:"localPath" dc:"本地文件路径"`
-	Type      string `json:"type" dc:"查询文件类型" v:"required|in:json,csv#查询类型不能为空|暂不支持此类型"`
+	//LocalPath string `json:"localPath" dc:"本地文件路径"`
+	Type string `json:"type" dc:"查询文件类型" v:"required|in:json,csv#查询类型不能为空|暂不支持此类型"`
 	oss.SelectRequest
 }
 

@@ -12,16 +12,17 @@ import (
 type OssBucketConfig struct {
 	Id            int64       `json:"id"            description:""`
 	BucketName    string      `json:"bucketName"    description:"存储空间名称"`
-	Endpoint      string      `json:"endpoint"      description:"bucket调用域名"`
+	Endpoint      string      `json:"endpoint"      description:"Bucket 的地域域名"`
 	StorageType   string      `json:"storageType"   description:"存储类型"`
 	RedundantType string      `json:"redundantType" description:"冗余类型"`
 	MonthlyFlow   int64       `json:"monthlyFlow"   description:"当月流量"`
 	VisitsNum     int         `json:"visitsNum"     description:"访问次数"`
 	UnionMainId   int64       `json:"unionMainId"   description:"主体ID"`
-	OwnerId       int64       `json:"ownerId"       description:"拥有者ID"`
+	OwnerId       int64       `json:"ownerId"       description:"拥有者ID，（阿里云OSS：阿里云账号的APPID、）"`
 	CreatedAt     *gtime.Time `json:"createdAt"     description:""`
 	UpdatedAt     *gtime.Time `json:"updatedAt"     description:""`
 	DeletedAt     *gtime.Time `json:"deletedAt"     description:""`
 	ProviderNo    string      `json:"providerNo"    description:"渠道商编号"`
 	State         int         `json:"state"         description:"状态：0禁用 1正常"`
+	BucketDomain  string      `json:"bucketDomain"  description:"Bucket的访问域名"`
 }
