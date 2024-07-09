@@ -6,7 +6,7 @@ require (
 	github.com/aliyun/aliyun-oss-go-sdk v3.0.1+incompatible
 	github.com/gogf/gf/contrib/nosql/redis/v2 v2.5.6
 	github.com/gogf/gf/v2 v2.6.0
-	github.com/kysion/base-library v0.0.33
+	github.com/kysion/base-library v0.0.35
 	github.com/yitter/idgenerator-go v1.3.3
 )
 
