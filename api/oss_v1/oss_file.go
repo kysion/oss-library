@@ -59,6 +59,12 @@ type QueryFilesReq struct {
 	oss_api.QueryFilesReq
 }
 
+type CopyFileToPathReq struct {
+	g.Meta `method:"post" summary:"将指定文件拷贝到指定位置" tags:"Oss文件"`
+
+	oss_api.CopyFileToPathReq
+}
+
 type GetFileSingURLReq struct {
 	g.Meta `method:"post" summary:"获取文件访问URL" tags:"Oss文件"`
 

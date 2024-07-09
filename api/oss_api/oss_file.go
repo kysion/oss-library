@@ -40,6 +40,10 @@ type QueryFilesReq struct {
 	oss_model.QueryFileListReq
 }
 
+type CopyFileToPathReq struct {
+	oss_model.CopyFileToPath
+}
+
 type GetFileSingURLReq struct {
 	oss_model.GetFileSingURL
 }
