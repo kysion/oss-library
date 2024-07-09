@@ -114,6 +114,13 @@ type QueryFileListReq struct {
 	// 设置了prefix的情况下，将delimiter设置为正斜线（/）
 }
 
+// CopyFileToPath 将指定文件拷贝到指定位置
+type CopyFileToPath struct {
+	MustInfo
+	ObjectName     string `json:"objectName" dc:"原始文件名称"`
+	DestObjectName string `json:"destObjectName" dc:"目标文件名称"`
+}
+
 // ObjectInfoRes 文件信息
 type ObjectInfoRes struct {
 	ObjectKey              string    `json:"objectKey" xml:"Key" dc:"存储文件key"`

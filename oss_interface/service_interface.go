@@ -23,6 +23,7 @@ type (
 		DeleteFile(ctx context.Context, info oss_model.DeleteFile) (bool, error)
 		DeleteFileList(ctx context.Context, info oss_model.DeleteFileList) (bool, error)
 		QueryFiles(ctx context.Context, info *oss_model.QueryFileListReq) (res []oss_model.ObjectInfoRes, err error)
+		CopyFileToPath(ctx context.Context, info *oss_model.CopyFileToPath) (bool, error)
 		CreateBucket(ctx context.Context, info oss_model.MustInfo) (*oss.Bucket, error)
 		GetObjectToFileWithURL(ctx context.Context, info oss_model.GetObjectToFileWithURL) (bool, error)
 		GetFileSingURL(ctx context.Context, info *oss_model.GetFileSingURL) (string, error)
