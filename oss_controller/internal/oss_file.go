@@ -230,7 +230,7 @@ func (c *OssFileController) GetFileSingURL(ctx context.Context, req *oss_api.Get
 	var ret string
 	switch req.ProviderNo {
 	case oss_enum.Oss.Type.Aliyun.Code():
-		ret, err = c.modules.OssAliyun().GetFileSingURL(ctx, &req.GetFileSingURL)
+		ret, err = c.modules.OssAliyun().GetFileSingURL(ctx, &req.GetFileSingURL, req.StyleStr)
 
 	case oss_enum.Oss.Type.Tencent.Code():
 
