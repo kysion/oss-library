@@ -26,7 +26,7 @@ type (
 		CopyFileToPath(ctx context.Context, info *oss_model.CopyFileToPath) (bool, error)
 		CreateBucket(ctx context.Context, info oss_model.MustInfo) (*oss.Bucket, error)
 		GetObjectToFileWithURL(ctx context.Context, info oss_model.GetObjectToFileWithURL) (bool, error)
-		GetFileSingURL(ctx context.Context, info *oss_model.GetFileSingURL) (string, error)
+		GetFileSingURL(ctx context.Context, info *oss_model.GetFileSingURL, styleStr ...string) (string, error)
 	}
 
 	IOssTencent interface {

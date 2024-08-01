@@ -460,7 +460,7 @@ func (s *sOssAliyun) GetObjectToFileWithURL(ctx context.Context, info oss_model.
 }
 
 // GetFileSingURL 获取文件的签名访问URL
-func (s *sOssAliyun) GetFileSingURL(ctx context.Context, info *oss_model.GetFileSingURL) (string, error) {
+func (s *sOssAliyun) GetFileSingURL(ctx context.Context, info *oss_model.GetFileSingURL, styleStr ...string) (string, error) {
 	// 创建存储空间Bucket
 	bucket, err := s.CreateBucket(ctx, info.MustInfo)
 	if err != nil {
@@ -470,8 +470,14 @@ func (s *sOssAliyun) GetFileSingURL(ctx context.Context, info *oss_model.GetFile
 	// 填写文件完整路径，例如exampledir/exampleobject.txt。文件完整路径中不能包含Bucket名称。
 	objectName := info.ObjectKey
 
+	// x-oss-process: image/quality,q_90/format,jpg
+	style := "image"
+	if len(styleStr) > 0 {
+		style += styleStr[0]
+	}
+
 	// 生成用于下载的签名URL，并指定签名URL的有效时间为60秒。
-	signedURL, err := bucket.SignURL(objectName, oss.HTTPGet, info.ExpiredInSec)
+	signedURL, err := bucket.SignURL(objectName, oss.HTTPGet, info.ExpiredInSec, oss.Process(style))
 	if err != nil {
 		return "", errors.New("获取文件的签名访问URL失败:" + err.Error())
 	}

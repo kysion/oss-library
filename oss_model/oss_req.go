@@ -79,6 +79,7 @@ type GetFileSingURL struct {
 	MustInfo
 	ObjectKey    string `json:"objectKey" dc:"存储文件key"`
 	ExpiredInSec int64  `json:"expiredInSec" dc:"URL过期时间，单位为秒"`
+	StyleStr     string `json:"styleStr" dc:"图片样式字符串，需要按照格式拼接，阿里云Oss图片格式化需求为jpg输出，并且质量相对变换50%，如：/quality,q_50/format,jpg/；需要拓展缩放比例，新的参数可以在后面添加。如：/quality,q_50/format,jpg/resize,h_100,m_lfit"`
 }
 
 // GetFile 查询文件
