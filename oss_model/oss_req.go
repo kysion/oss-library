@@ -67,12 +67,27 @@ type DownLoadFile struct {
 	ContentEncoding string `json:"contentEncoding" dc:"压缩格式"`
 }
 
+// GetObjectToFileWithURL 根据路径下载文件
+type GetObjectToFileWithURL struct {
+	MustInfo
+	FilePath string `json:"filePath"  dc:"本地存储的文件路径"`
+	SingUrl  string `json:"singUrl" dc:"文件URL"`
+}
+
+// GetFileSingURL 根据路径下载文件
+type GetFileSingURL struct {
+	MustInfo
+	ObjectKey    string `json:"objectKey" dc:"存储文件key"`
+	ExpiredInSec int64  `json:"expiredInSec" dc:"URL过期时间，单位为秒"`
+	StyleStr     string `json:"styleStr" dc:"图片样式字符串，需要按照格式拼接，阿里云Oss图片格式化需求为jpg输出，并且质量相对变换50%，如：/quality,q_50/format,jpg/；需要拓展缩放比例，新的参数可以在后面添加。如：/quality,q_50/format,jpg/resize,h_100,m_lfit"`
+}
+
 // GetFile 查询文件
 type GetFile struct {
 	MustInfo
 	ObjectKey string `json:"objectKey" dc:"等同于objectName"`
-	LocalPath string `json:"localPath" dc:"本地文件路径"`
-	Type      string `json:"type" dc:"查询文件类型" v:"required|in:json,csv#查询类型不能为空|暂不支持此类型"`
+	//LocalPath string `json:"localPath" dc:"本地文件路径"`
+	Type string `json:"type" dc:"查询文件类型" v:"required|in:json,csv#查询类型不能为空|暂不支持此类型"`
 	oss.SelectRequest
 }
 
@@ -98,6 +113,13 @@ type QueryFileListReq struct {
 	// OSS没有文件夹的概念，所有元素都是以文件来存储。创建文件夹本质上来说是创建了一个大小为0并以正斜线（/）结尾的文件
 	// 设置prefix为某个文件夹名称，则会列举以此prefix开头的文件
 	// 设置了prefix的情况下，将delimiter设置为正斜线（/）
+}
+
+// CopyFileToPath 将指定文件拷贝到指定位置
+type CopyFileToPath struct {
+	MustInfo
+	ObjectName     string `json:"objectName" dc:"原始文件名称"`
+	DestObjectName string `json:"destObjectName" dc:"目标文件名称"`
 }
 
 // ObjectInfoRes 文件信息

@@ -16,8 +16,7 @@ type OssServiceProviderConfig struct {
 	AccessKeyId     string      `json:"accessKeyId"     description:"身份标识"`
 	AccessKeySecret string      `json:"accessKeySecret" description:"身份认证密钥"`
 	Token           string      `json:"token"           description:"安全令牌"`
-	BasePath        string      `json:"basePath"        description:"域名"`
-	Endpoint        string      `json:"endpoint"        description:"bucket调用域名"`
+	Endpoint        string      `json:"endpoint"        description:"Bucket的地域域名"`
 	Remark          string      `json:"remark"          description:"备注"`
 	Status          int         `json:"status"          description:"状态：0禁用 1启用"`
 	ExtJson         string      `json:"extJson"         description:"拓展字段"`
@@ -25,4 +24,5 @@ type OssServiceProviderConfig struct {
 	CreatedAt       *gtime.Time `json:"createdAt"       description:""`
 	UpdatedAt       *gtime.Time `json:"updatedAt"       description:""`
 	DeletedAt       *gtime.Time `json:"deletedAt"       description:""`
+	Priority        int         `json:"priority"        description:"优先级，使用默认选择优先级最高的"`
 }

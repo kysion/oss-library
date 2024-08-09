@@ -14,16 +14,17 @@ type OssBucketConfig struct {
 	g.Meta        `orm:"table:oss_bucket_config, do:true"`
 	Id            interface{} //
 	BucketName    interface{} // 存储空间名称
-	Endpoint      interface{} // bucket调用域名
+	Endpoint      interface{} // Bucket 的地域域名
 	StorageType   interface{} // 存储类型
 	RedundantType interface{} // 冗余类型
 	MonthlyFlow   interface{} // 当月流量
 	VisitsNum     interface{} // 访问次数
 	UnionMainId   interface{} // 主体ID
-	OwnerId       interface{} // 拥有者ID
+	OwnerId       interface{} // 拥有者ID，（阿里云OSS：阿里云账号的APPID、）
 	CreatedAt     *gtime.Time //
 	UpdatedAt     *gtime.Time //
 	DeletedAt     *gtime.Time //
 	ProviderNo    interface{} // 渠道商编号
 	State         interface{} // 状态：0禁用 1正常
+	BucketDomain  interface{} // Bucket的访问域名
 }

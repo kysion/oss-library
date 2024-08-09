@@ -46,6 +46,10 @@ func OssFileGroup(modules oss_interface.IModules, group *ghttp.RouterGroup) *ght
 	group.POST(routePrefix+"/deleteFile", controller.DeleteFile)
 	group.POST(routePrefix+"/deleteFileList", controller.DeleteFileList)
 	group.POST(routePrefix+"/queryFiles", controller.QueryFiles)
+	group.POST(routePrefix+"/copyFileToPath", controller.CopyFileToPath)
+	group.POST(routePrefix+"/getFileSingURL", controller.GetFileSingURL)
+	group.POST(routePrefix+"/getObjectToFileWithURL", controller.GetObjectToFileWithURL)
+
 	return group
 
 }

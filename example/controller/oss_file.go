@@ -68,3 +68,18 @@ func (c *OssFileController) DeleteFileList(ctx context.Context, req *oss_v1.Dele
 func (c *OssFileController) QueryFiles(ctx context.Context, req *oss_v1.QueryFilesReq) (oss_model.ObjectInfoListRes, error) {
 	return c.IOssFile.QueryFiles(ctx, &req.QueryFilesReq)
 }
+
+// CopyFileToPath 将指定文件拷贝到指定位置
+func (c *OssFileController) CopyFileToPath(ctx context.Context, req *oss_v1.CopyFileToPathReq) (oss_api.BoolRes, error) {
+	return c.IOssFile.CopyFileToPath(ctx, &req.CopyFileToPathReq)
+}
+
+// GetFileSingURL 获取文件的签名访问URL
+func (c *OssFileController) GetFileSingURL(ctx context.Context, req *oss_v1.GetFileSingURLReq) (oss_api.StringRes, error) {
+	return c.IOssFile.GetFileSingURL(ctx, &req.GetFileSingURLReq)
+}
+
+// GetObjectToFileWithURL 根据文件访问URL获取文件
+func (c *OssFileController) GetObjectToFileWithURL(ctx context.Context, req *oss_v1.GetObjectToFileWithURLReq) (oss_api.BoolRes, error) {
+	return c.IOssFile.GetObjectToFileWithURL(ctx, &req.GetObjectToFileWithURLReq)
+}

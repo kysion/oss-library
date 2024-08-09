@@ -1,9 +1,9 @@
 package oss_dao
 
 type XDao struct {
-	OssAppConfig OssAppConfig
+	OssAppConfig OssAppConfigDao
 
-	OssServiceProviderConfig OssServiceProviderConfig
+	OssServiceProviderConfig OssServiceProviderConfigDao
 
-	OssBucketConfig OssBucketConfig
+	OssBucketConfig OssBucketConfigDao
 }

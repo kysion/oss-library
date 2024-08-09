@@ -204,3 +204,64 @@ func (c *OssFileController) QueryFiles(ctx context.Context, req *oss_api.QueryFi
 	}
 	return ret, err
 }
+
+// CopyFileToPath 将指定文件拷贝到指定位置
+func (c *OssFileController) CopyFileToPath(ctx context.Context, req *oss_api.CopyFileToPathReq) (res oss_api.BoolRes, err error) {
+	var ret bool
+	switch req.ProviderNo {
+	case oss_enum.Oss.Type.Aliyun.Code():
+		ret, err = c.modules.OssAliyun().CopyFileToPath(ctx, &req.CopyFileToPath)
+
+	case oss_enum.Oss.Type.Tencent.Code():
+
+	case oss_enum.Oss.Type.Qiniu.Code():
+	case oss_enum.Oss.Type.Minio.Code():
+	case oss_enum.Oss.Type.Huawei.Code():
+	case oss_enum.Oss.Type.Local.Code():
+
+	default:
+		return false, errors.New("抱歉，暂不支持此渠道商！")
+	}
+	return ret == true, err
+}
+
+// GetFileSingURL 获取文件的签名访问URL
+func (c *OssFileController) GetFileSingURL(ctx context.Context, req *oss_api.GetFileSingURLReq) (res oss_api.StringRes, err error) {
+	var ret string
+	switch req.ProviderNo {
+	case oss_enum.Oss.Type.Aliyun.Code():
+		ret, err = c.modules.OssAliyun().GetFileSingURL(ctx, &req.GetFileSingURL, req.StyleStr)
+
+	case oss_enum.Oss.Type.Tencent.Code():
+
+	case oss_enum.Oss.Type.Qiniu.Code():
+	case oss_enum.Oss.Type.Minio.Code():
+	case oss_enum.Oss.Type.Huawei.Code():
+	case oss_enum.Oss.Type.Local.Code():
+
+	default:
+		return "", errors.New("抱歉，暂不支持此渠道商！")
+	}
+	return (oss_api.StringRes)(ret), err
+}
+
+// GetObjectToFileWithURL 根据URL获取存储对象
+func (c *OssFileController) GetObjectToFileWithURL(ctx context.Context, req *oss_api.GetObjectToFileWithURLReq) (oss_api.BoolRes, error) {
+	var ret bool
+	var err error
+	switch req.ProviderNo {
+	case oss_enum.Oss.Type.Aliyun.Code():
+		ret, err = c.modules.OssAliyun().GetObjectToFileWithURL(ctx, req.GetObjectToFileWithURL)
+
+	case oss_enum.Oss.Type.Tencent.Code():
+
+	case oss_enum.Oss.Type.Qiniu.Code():
+	case oss_enum.Oss.Type.Minio.Code():
+	case oss_enum.Oss.Type.Huawei.Code():
+	case oss_enum.Oss.Type.Local.Code():
+
+	default:
+		return false, errors.New("抱歉，暂不支持此渠道商！")
+	}
+	return ret == true, err
+}

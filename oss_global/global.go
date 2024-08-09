@@ -19,7 +19,7 @@ var (
 				KeyIndex:         "Oss",
 				RoutePrefix:      "/oss",
 				I18nName:         "oss",
-				StoragePath:      "./resources/oss",
+				StoragePath:      "resource/oss",
 				Identifier: oss_model.Identifier{
 					Oss:                      "oss",
 					OssAppConfig:             "ossAppConfig",

@@ -95,3 +95,21 @@ func (s *sServiceProviderConfig) QueryProviderList(ctx context.Context, search *
 
 	return (*oss_model.OssServiceProviderListRes)(result), err
 }
+
+// GetProviderByPriority 根据优先级获取渠道商
+func (s *sServiceProviderConfig) GetProviderByPriority(ctx context.Context, priority int) (*oss_model.OssServiceProviderConfig, error) {
+	if priority == 0 {
+		return nil, errors.New("优先级不能为空" + s.dao.OssServiceProviderConfig.Table())
+	}
+
+	data := oss_entity.OssServiceProviderConfig{}
+
+	err := s.dao.OssServiceProviderConfig.Ctx(ctx).Where(oss_do.OssServiceProviderConfig{Priority: priority}).Scan(&data)
+	if err != nil {
+		return nil, errors.New("根据id获取渠道商信息失败：" + err.Error() + s.dao.OssServiceProviderConfig.Table())
+	}
+
+	res := kconv.Struct[*oss_model.OssServiceProviderConfig](data, &oss_model.OssServiceProviderConfig{})
+
+	return res, nil
+}
