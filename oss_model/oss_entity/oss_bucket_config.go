@@ -10,19 +10,19 @@ import (
 
 // OssBucketConfig is the golang structure for table oss_bucket_config.
 type OssBucketConfig struct {
-	Id            int64       `json:"id"            description:""`
-	BucketName    string      `json:"bucketName"    description:"存储空间名称"`
-	Endpoint      string      `json:"endpoint"      description:"Bucket 的地域域名"`
-	StorageType   string      `json:"storageType"   description:"存储类型"`
-	RedundantType string      `json:"redundantType" description:"冗余类型"`
-	MonthlyFlow   int64       `json:"monthlyFlow"   description:"当月流量"`
-	VisitsNum     int         `json:"visitsNum"     description:"访问次数"`
-	UnionMainId   int64       `json:"unionMainId"   description:"主体ID"`
-	OwnerId       int64       `json:"ownerId"       description:"拥有者ID，（阿里云OSS：阿里云账号的APPID、）"`
-	CreatedAt     *gtime.Time `json:"createdAt"     description:""`
-	UpdatedAt     *gtime.Time `json:"updatedAt"     description:""`
-	DeletedAt     *gtime.Time `json:"deletedAt"     description:""`
-	ProviderNo    string      `json:"providerNo"    description:"渠道商编号"`
-	State         int         `json:"state"         description:"状态：0禁用 1正常"`
-	BucketDomain  string      `json:"bucketDomain"  description:"Bucket的访问域名"`
+	Id            int64       `json:"id"            orm:"id"             description:""`
+	BucketName    string      `json:"bucketName"    orm:"bucket_name"    description:"存储空间名称"`
+	Endpoint      string      `json:"endpoint"      orm:"endpoint"       description:"Bucket 的地域域名"`
+	StorageType   string      `json:"storageType"   orm:"storage_type"   description:"存储类型"`
+	RedundantType string      `json:"redundantType" orm:"redundant_type" description:"冗余类型"`
+	MonthlyFlow   int64       `json:"monthlyFlow"   orm:"monthly_flow"   description:"当月流量"`
+	VisitsNum     int         `json:"visitsNum"     orm:"visits_num"     description:"访问次数"`
+	UnionMainId   int64       `json:"unionMainId"   orm:"union_main_id"  description:"主体ID"`
+	OwnerId       int64       `json:"ownerId"       orm:"owner_id"       description:"拥有者ID，（阿里云OSS：阿里云账号的APPID、）"`
+	CreatedAt     *gtime.Time `json:"createdAt"     orm:"created_at"     description:""`
+	UpdatedAt     *gtime.Time `json:"updatedAt"     orm:"updated_at"     description:""`
+	DeletedAt     *gtime.Time `json:"deletedAt"     orm:"deleted_at"     description:""`
+	ProviderNo    string      `json:"providerNo"    orm:"provider_no"    description:"渠道商编号"`
+	State         int         `json:"state"         orm:"state"          description:"状态：0禁用 1正常"`
+	BucketDomain  string      `json:"bucketDomain"  orm:"bucket_domain"  description:"Bucket的访问域名"`
 }
