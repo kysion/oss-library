@@ -7,6 +7,8 @@ import (
 	"github.com/gogf/gf/v2/os/gcmd"
 	"github.com/kysion/oss-library/example/router"
 	"github.com/kysion/oss-library/oss_global"
+
+	_ "github.com/kysion/oss-library/example/internal/boot"
 )
 
 var (
