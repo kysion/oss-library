@@ -2,10 +2,11 @@ package oss_modules
 
 import (
 	"context"
-	"github.com/kysion/oss-library/internal/logic/oss"
-
 	"github.com/gogf/gf/v2/i18n/gi18n"
+	"github.com/kysion/base-library/utility/base_permission"
+	"github.com/kysion/oss-library/example/model"
 	"github.com/kysion/oss-library/internal/boot"
+	"github.com/kysion/oss-library/internal/logic/oss"
 	"github.com/kysion/oss-library/internal/logic/oss_aliyun"
 	"github.com/kysion/oss-library/oss_consts"
 	"github.com/kysion/oss-library/oss_interface"
@@ -94,6 +95,13 @@ func NewModules(
 	module.ossServiceProviderConfig = oss.NewOssServiceProviderConfig(module)
 	module.ossBucketConfig = oss.NewBucketConfig(module)
 	module.ossAliyun = oss_aliyun.NewOssAliyun(module)
+
+	base_permission.InitializePermissionFactory(func() base_permission.IPermission {
+		return &model.PermissionTree{
+			Permission: &model.Permission{},
+			Children:   nil,
+		}
+	})
 
 	// 权限树追加权限
 	oss_consts.PermissionTree = append(oss_consts.PermissionTree, boot.InitPermission(module, nil)...)
