@@ -2,7 +2,8 @@ package internal
 
 import (
 	"context"
-	"errors"
+	"fmt"
+
 	"github.com/kysion/oss-library/api/oss_api"
 	"github.com/kysion/oss-library/oss_interface"
 	"github.com/kysion/oss-library/oss_interface/i_controller"
@@ -39,7 +40,7 @@ func (c *OssFileController) UploadFile(ctx context.Context, req *oss_api.UploadF
 	case oss_enum.Oss.Type.Local.Code():
 
 	default:
-		return false, errors.New("抱歉，暂不支持此渠道商！")
+		return false, fmt.Errorf("{#error_oss_controller_provider_not_supported}")
 	}
 
 	// 实际需要返回上传的一些信息，不能只是简单的布尔值
@@ -61,7 +62,7 @@ func (c *OssFileController) PartPutUpload(ctx context.Context, req *oss_api.Part
 	case oss_enum.Oss.Type.Local.Code():
 
 	default:
-		return false, errors.New("抱歉，暂不支持此渠道商！")
+		return false, fmt.Errorf("{#error_oss_controller_provider_not_supported}")
 	}
 	return ret == true, err
 }
@@ -80,7 +81,7 @@ func (c *OssFileController) MultipartPartUpload(ctx context.Context, req *oss_ap
 	case oss_enum.Oss.Type.Local.Code():
 
 	default:
-		return false, errors.New("抱歉，暂不支持此渠道商！")
+		return false, fmt.Errorf("{#error_oss_controller_provider_not_supported}")
 	}
 	return ret == true, err
 
@@ -100,7 +101,7 @@ func (c *OssFileController) DownloadFile(ctx context.Context, req *oss_api.Downl
 	case oss_enum.Oss.Type.Local.Code():
 
 	default:
-		return false, errors.New("抱歉，暂不支持此渠道商！")
+		return false, fmt.Errorf("{#error_oss_controller_provider_not_supported}")
 	}
 	return ret == true, err
 }
@@ -119,7 +120,7 @@ func (c *OssFileController) PartPutDownload(ctx context.Context, req *oss_api.Pa
 	case oss_enum.Oss.Type.Local.Code():
 
 	default:
-		return false, errors.New("抱歉，暂不支持此渠道商！")
+		return false, fmt.Errorf("{#error_oss_controller_provider_not_supported}")
 	}
 	return ret == true, err
 }
@@ -139,7 +140,7 @@ func (c *OssFileController) GetFile(ctx context.Context, req *oss_api.GetFileReq
 	case oss_enum.Oss.Type.Local.Code():
 
 	default:
-		return nil, errors.New("抱歉，暂不支持此渠道商！")
+		return nil, fmt.Errorf("{#error_oss_controller_provider_not_supported}")
 	}
 
 	// 返回字节
@@ -161,7 +162,7 @@ func (c *OssFileController) DeleteFile(ctx context.Context, req *oss_api.DeleteF
 	case oss_enum.Oss.Type.Local.Code():
 
 	default:
-		return false, errors.New("抱歉，暂不支持此渠道商！")
+		return false, fmt.Errorf("{#error_oss_controller_provider_not_supported}")
 	}
 	return ret == true, err
 }
@@ -180,7 +181,7 @@ func (c *OssFileController) DeleteFileList(ctx context.Context, req *oss_api.Del
 	case oss_enum.Oss.Type.Local.Code():
 
 	default:
-		return false, errors.New("抱歉，暂不支持此渠道商！")
+		return false, fmt.Errorf("{#error_oss_controller_provider_not_supported}")
 	}
 	return ret == true, err
 }
@@ -200,7 +201,7 @@ func (c *OssFileController) QueryFiles(ctx context.Context, req *oss_api.QueryFi
 	case oss_enum.Oss.Type.Local.Code():
 
 	default:
-		return nil, errors.New("抱歉，暂不支持此渠道商！")
+		return nil, fmt.Errorf("{#error_oss_controller_provider_not_supported}")
 	}
 	return ret, err
 }
@@ -220,7 +221,7 @@ func (c *OssFileController) CopyFileToPath(ctx context.Context, req *oss_api.Cop
 	case oss_enum.Oss.Type.Local.Code():
 
 	default:
-		return false, errors.New("抱歉，暂不支持此渠道商！")
+		return false, fmt.Errorf("{#error_oss_controller_provider_not_supported}")
 	}
 	return ret == true, err
 }
@@ -240,7 +241,7 @@ func (c *OssFileController) GetFileSingURL(ctx context.Context, req *oss_api.Get
 	case oss_enum.Oss.Type.Local.Code():
 
 	default:
-		return "", errors.New("抱歉，暂不支持此渠道商！")
+		return "", fmt.Errorf("{#error_oss_controller_provider_not_supported}")
 	}
 	return (oss_api.StringRes)(ret), err
 }
@@ -261,7 +262,7 @@ func (c *OssFileController) GetObjectToFileWithURL(ctx context.Context, req *oss
 	case oss_enum.Oss.Type.Local.Code():
 
 	default:
-		return false, errors.New("抱歉，暂不支持此渠道商！")
+		return false, fmt.Errorf("{#error_oss_controller_provider_not_supported}")
 	}
 	return ret == true, err
 }

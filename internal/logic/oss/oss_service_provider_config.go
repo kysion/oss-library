@@ -2,7 +2,8 @@ package oss
 
 import (
 	"context"
-	"errors"
+	"fmt"
+
 	"github.com/gogf/gf/v2/os/gtime"
 	"github.com/gogf/gf/v2/util/gconv"
 	"github.com/kysion/base-library/base_model"
@@ -45,7 +46,7 @@ func (s *sServiceProviderConfig) CreateProvider(ctx context.Context, info *oss_m
 	_, err := model.OmitNilData().Insert(data)
 
 	if err != nil {
-		return nil, errors.New("渠道商添加失败" + s.dao.OssServiceProviderConfig.Table())
+		return nil, fmt.Errorf("{#error_oss_service_provider_config_create_failed}")
 	}
 
 	return s.GetProviderById(ctx, gconv.Int64(data.Id))
@@ -54,17 +55,17 @@ func (s *sServiceProviderConfig) CreateProvider(ctx context.Context, info *oss_m
 // GetProviderById 根据ID获取渠道商
 func (s *sServiceProviderConfig) GetProviderById(ctx context.Context, id int64) (*oss_model.OssServiceProviderConfig, error) {
 	if id == 0 {
-		return nil, errors.New("渠道商id不能为空" + s.dao.OssServiceProviderConfig.Table())
+		return nil, fmt.Errorf("{#error_oss_service_provider_config_id_empty}")
 	}
 
 	data := oss_entity.OssServiceProviderConfig{}
 
 	err := s.dao.OssServiceProviderConfig.Ctx(ctx).Where(oss_do.OssServiceProviderConfig{Id: id}).Scan(&data)
 	if err != nil {
-		return nil, errors.New("根据id获取渠道商信息失败：" + err.Error() + s.dao.OssServiceProviderConfig.Table())
+		return nil, fmt.Errorf("{#error_oss_service_provider_config_get_by_id_failed}")
 	}
 
-	res := kconv.Struct[*oss_model.OssServiceProviderConfig](data, &oss_model.OssServiceProviderConfig{})
+	res := kconv.Struct(data, &oss_model.OssServiceProviderConfig{})
 
 	return res, nil
 }
@@ -72,7 +73,7 @@ func (s *sServiceProviderConfig) GetProviderById(ctx context.Context, id int64) 
 // QueryProviderByNo 根据No编号获取渠道商列表
 func (s *sServiceProviderConfig) QueryProviderByNo(ctx context.Context, no string, params *base_model.SearchParams) (*oss_model.OssServiceProviderListRes, error) {
 	if no == "" {
-		return nil, errors.New("渠道商编号不能为空" + s.dao.OssServiceProviderConfig.Table())
+		return nil, fmt.Errorf("{#error_oss_service_provider_config_no_empty}")
 	}
 
 	res, err := daoctl.Query[oss_entity.OssServiceProviderConfig](s.dao.OssServiceProviderConfig.Ctx(ctx).Where(
@@ -81,10 +82,10 @@ func (s *sServiceProviderConfig) QueryProviderByNo(ctx context.Context, no strin
 		false)
 
 	if err != nil {
-		return nil, errors.New("根据编号获取渠道商信息失败：" + err.Error() + s.dao.OssServiceProviderConfig.Table())
+		return nil, fmt.Errorf("{#error_oss_service_provider_config_query_by_no_failed}")
 	}
 
-	ret := kconv.Struct[*oss_model.OssServiceProviderListRes](res, &oss_model.OssServiceProviderListRes{})
+	ret := kconv.Struct(res, &oss_model.OssServiceProviderListRes{})
 
 	return ret, nil
 }
@@ -99,17 +100,17 @@ func (s *sServiceProviderConfig) QueryProviderList(ctx context.Context, search *
 // GetProviderByPriority 根据优先级获取渠道商
 func (s *sServiceProviderConfig) GetProviderByPriority(ctx context.Context, priority int) (*oss_model.OssServiceProviderConfig, error) {
 	if priority == 0 {
-		return nil, errors.New("优先级不能为空" + s.dao.OssServiceProviderConfig.Table())
+		return nil, fmt.Errorf("{#error_oss_service_provider_config_priority_empty}")
 	}
 
 	data := oss_entity.OssServiceProviderConfig{}
 
 	err := s.dao.OssServiceProviderConfig.Ctx(ctx).Where(oss_do.OssServiceProviderConfig{Priority: priority}).Scan(&data)
 	if err != nil {
-		return nil, errors.New("根据id获取渠道商信息失败：" + err.Error() + s.dao.OssServiceProviderConfig.Table())
+		return nil, fmt.Errorf("{#error_oss_service_provider_config_get_by_priority_failed}")
 	}
 
-	res := kconv.Struct[*oss_model.OssServiceProviderConfig](data, &oss_model.OssServiceProviderConfig{})
+	res := kconv.Struct(data, &oss_model.OssServiceProviderConfig{})
 
 	return res, nil
 }
