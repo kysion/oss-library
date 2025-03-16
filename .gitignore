@@ -21,3 +21,4 @@ temp/
 .env
 hack/config.yaml
 database/migrations
+.history
