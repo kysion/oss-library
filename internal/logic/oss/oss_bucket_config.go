@@ -2,7 +2,8 @@ package oss
 
 import (
 	"context"
-	"errors"
+	"fmt"
+
 	"github.com/gogf/gf/v2/util/gconv"
 	"github.com/kysion/base-library/utility/kconv"
 	"github.com/kysion/oss-library/oss_interface"
@@ -29,17 +30,17 @@ func NewBucketConfig(modules oss_interface.IModules) oss_interface.IBucketConfig
 // GetBucketById 根据id获取Bucket配置信息
 func (s *sBucketConfig) GetBucketById(ctx context.Context, id int64) (*oss_model.OssBucketConfig, error) {
 	if id == 0 {
-		return nil, errors.New("id不能为空" + s.dao.OssBucketConfig.Table())
+		return nil, fmt.Errorf("{#error_oss_bucket_config_id_empty}")
 	}
 
 	data := oss_entity.OssBucketConfig{}
 
 	err := s.dao.OssBucketConfig.Ctx(ctx).Where(oss_do.OssBucketConfig{Id: id}).Scan(&data)
 	if err != nil {
-		return nil, errors.New("根据id获取存储空间信息失败" + err.Error() + s.dao.OssBucketConfig.Table())
+		return nil, fmt.Errorf("{#error_oss_bucket_config_get_by_id_failed}")
 	}
 
-	res := kconv.Struct[*oss_model.OssBucketConfig](data, &oss_model.OssBucketConfig{})
+	res := kconv.Struct(data, &oss_model.OssBucketConfig{})
 
 	return res, nil
 }
@@ -47,13 +48,17 @@ func (s *sBucketConfig) GetBucketById(ctx context.Context, id int64) (*oss_model
 // CreateBucket 创建存储空间配置信息 (上下文, 存储空间信息)
 func (s *sBucketConfig) CreateBucket(ctx context.Context, info *oss_model.OssBucketConfig) (bool, error) {
 	// 判断同一个渠道商下面是否名称重复
-	count, _ := s.dao.OssBucketConfig.Ctx(ctx).Where(oss_do.OssBucketConfig{
+	count, err := s.dao.OssBucketConfig.Ctx(ctx).Where(oss_do.OssBucketConfig{
 		BucketName: info.BucketName,
 		ProviderNo: info.ProviderNo,
 	}).Count()
 
+	if err != nil {
+		return false, fmt.Errorf("{#error_oss_bucket_config_check_name_failed}")
+	}
+
 	if count > 0 {
-		return false, errors.New("存储空间名称重复" + s.dao.OssBucketConfig.Table())
+		return false, fmt.Errorf("{#error_oss_bucket_config_name_duplicate}")
 	}
 
 	// 生成id
@@ -63,9 +68,9 @@ func (s *sBucketConfig) CreateBucket(ctx context.Context, info *oss_model.OssBuc
 	data.State = 1 // 默认正常
 	// data.UnionMainId = sys_service.SysSession().Get(ctx).JwtClaimsUser.UnionMainId
 
-	_, err := s.dao.OssBucketConfig.Ctx(ctx).Insert(data)
+	_, err = s.dao.OssBucketConfig.Ctx(ctx).Insert(data)
 	if err != nil {
-		return false, errors.New("存储空间创建失败" + s.dao.OssBucketConfig.Table())
+		return false, fmt.Errorf("{#error_oss_bucket_config_create_failed}")
 	}
 
 	return true, nil
@@ -74,7 +79,7 @@ func (s *sBucketConfig) CreateBucket(ctx context.Context, info *oss_model.OssBuc
 // GetByBucketNameAndProviderNo 根据渠道商编号和Bucket存储对象名称获取存储对象
 func (s *sBucketConfig) GetByBucketNameAndProviderNo(ctx context.Context, bucketName, providerNo string, state ...int) (*oss_model.OssBucketConfig, error) {
 	if bucketName == "" {
-		return nil, errors.New("存储对象Name不能为空" + s.dao.OssBucketConfig.Table())
+		return nil, fmt.Errorf("{#error_oss_bucket_config_name_empty}")
 	}
 
 	data := oss_entity.OssBucketConfig{}
@@ -85,10 +90,10 @@ func (s *sBucketConfig) GetByBucketNameAndProviderNo(ctx context.Context, bucket
 
 	err := model.Scan(&data)
 	if err != nil {
-		return nil, errors.New("根据渠道商编号和Bucket存储对象名称获取存储对象失败：" + err.Error() + s.dao.OssBucketConfig.Table())
+		return nil, fmt.Errorf("{#error_oss_bucket_config_get_by_name_provider_failed}")
 	}
 
-	res := kconv.Struct[*oss_model.OssBucketConfig](data, &oss_model.OssBucketConfig{})
+	res := kconv.Struct(data, &oss_model.OssBucketConfig{})
 
 	return res, nil
 }

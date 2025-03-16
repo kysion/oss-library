@@ -2,7 +2,8 @@ package internal
 
 import (
 	"context"
-	"errors"
+	"fmt"
+
 	"github.com/kysion/oss-library/api/oss_api"
 	"github.com/kysion/oss-library/oss_interface"
 	"github.com/kysion/oss-library/oss_interface/i_controller"
@@ -63,7 +64,7 @@ func (c *OssController) RegisterBucket(ctx context.Context, req *oss_api.Registe
 	case oss_enum.Oss.Type.Qiniu.Code():
 
 	default:
-		return false, errors.New("抱歉，暂不支持此渠道商！")
+		return false, fmt.Errorf("{#error_oss_controller_provider_not_supported}")
 	}
 
 	return ret == true, err
@@ -100,7 +101,7 @@ func (c *OssController) CreateProvider(ctx context.Context, req *oss_api.CreateP
 	// 本地云
 
 	default:
-		return nil, errors.New("抱歉，暂不支持此渠道商！")
+		return nil, fmt.Errorf("{#error_oss_controller_provider_not_supported}")
 	}
 
 	// ret, err := c.modules.OssServiceProviderConfig().CreateProvider(ctx, &req.OssServiceProviderConfig)
