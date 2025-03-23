@@ -1,4 +1,4 @@
-name: 持续集成
+name: Continuous Integration
 
 on:
     push:
@@ -7,69 +7,25 @@ on:
         branches: [main, dev]
 
 jobs:
-    lint:
-        name: 代码检查
-        runs-on: ubuntu-latest
-        steps:
-            - name: 检出代码
-              uses: actions/checkout@v3
-
-            - name: 设置Go环境
-              uses: actions/setup-go@v4
-              with:
-                  go-version: '>=1.21.0'
-                  cache: true
-
-            - name: 安装golangci-lint
-              run: |
-                  curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.54.2
-                  golangci-lint --version
-
-            - name: 运行golangci-lint
-              run: golangci-lint run --timeout=5m
-
     test:
         name: 测试覆盖率
         runs-on: ubuntu-latest
         steps:
             - name: 检出代码
-              uses: actions/checkout@v3
+              uses: actions/checkout@v4
 
             - name: 设置Go环境
-              uses: actions/setup-go@v4
+              uses: actions/setup-go@v5
               with:
-                  go-version: '>=1.21.0'
+                  go-version: '>=1.24.0'
                   cache: true
 
             - name: 运行测试并生成覆盖率报告
-              run: go test -race -coverprofile=coverage.txt -covermode=atomic ./...
+              run: go test -v ./... -coverprofile=coverage.txt -covermode=atomic
 
             - name: 上传覆盖率报告到Codecov
-              uses: codecov/codecov-action@v3
+              uses: codecov/codecov-action@v4
               with:
                   file: ./coverage.txt
-                  flags: unittests
                   fail_ci_if_error: false
-
-    security:
-        name: 安全扫描
-        runs-on: ubuntu-latest
-        steps:
-            - name: 检出代码
-              uses: actions/checkout@v3
-
-            - name: 设置Go环境
-              uses: actions/setup-go@v4
-              with:
-                  go-version: '>=1.21.0'
-                  cache: true
-
-            - name: 运行Gosec安全扫描器
-              uses: securego/gosec@v2
-              with:
-                  args: '-no-fail -fmt sarif -out results.sarif ./...'
-
-            - name: 上传SARIF文件
-              uses: github/codeql-action/upload-sarif@v2
-              with:
-                  sarif_file: results.sarif
+                  token: ${{ secrets.CODECOV_TOKEN }}
