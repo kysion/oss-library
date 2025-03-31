@@ -2,8 +2,11 @@ package oss_aliyun
 
 import (
 	"context"
-	"errors"
 	"fmt"
+	"io/ioutil"
+	"os"
+	"time"
+
 	"github.com/aliyun/aliyun-oss-go-sdk/oss"
 	"github.com/kysion/oss-library/internal/logic/osser"
 	"github.com/kysion/oss-library/oss_interface"
@@ -12,9 +15,6 @@ import (
 	"github.com/kysion/oss-library/oss_model/oss_do"
 	"github.com/kysion/oss-library/oss_model/oss_entity"
 	"github.com/kysion/oss-library/oss_model/oss_enum"
-	"io/ioutil"
-	"os"
-	"time"
 )
 
 type sOssAliyun struct {
@@ -71,7 +71,7 @@ func (s *sOssAliyun) UploadFile(ctx context.Context, info *oss_model.PutObject) 
 	// 上传文件。
 	err = bucket.PutObjectFromFile(objectKey, localFilePath)
 	if err != nil {
-		return false, errors.New("上传文件失败: " + err.Error() + s.category)
+		return false, fmt.Errorf("{#error_oss_aliyun_upload_file_failed}")
 	}
 
 	return true, nil
@@ -88,7 +88,7 @@ func (s *sOssAliyun) PartPutUpload(ctx context.Context, info *oss_model.PartPutO
 	// UploadFile(文件key，源文件，分片大小，并发数，是否开启断点续传，断点续传文件)
 	err = bucket.UploadFile(info.ObjectKey, info.FilePath, info.PartSize, oss.Routines(info.Routines), oss.Checkpoint(info.Checkpoint, info.CheckpointFile))
 	if err != nil {
-		return false, errors.New("文件断点续传上传失败" + err.Error() + s.category)
+		return false, fmt.Errorf("{#error_oss_aliyun_part_upload_failed}")
 	}
 
 	return true, nil
@@ -127,7 +127,7 @@ func (s *sOssAliyun) MultipartPartUpload(ctx context.Context, info *oss_model.Mu
 	// 步骤1：初始化一个分片上传事件，并指定存储类型为标准存储。 UploadId: 59ECF5FAAC8A496E8D6C22E611F08BEF
 	imur, err := bucket.InitiateMultipartUpload(info.ObjectKey, options...)
 	if err != nil {
-		return false, errors.New("分片上传文件失败" + err.Error() + s.category)
+		return false, fmt.Errorf("{#error_oss_aliyun_multipart_upload_failed}")
 	}
 	// 步骤2：上传分片。
 	var parts []oss.UploadPart
@@ -136,7 +136,7 @@ func (s *sOssAliyun) MultipartPartUpload(ctx context.Context, info *oss_model.Mu
 		// 调用UploadPart方法上传每个分片。
 		part, err := bucket.UploadPart(imur, fd, chunk.Size, chunk.Number)
 		if err != nil {
-			return false, errors.New("分片上传文件失败" + err.Error() + s.category)
+			return false, fmt.Errorf("{#error_oss_aliyun_multipart_upload_failed}")
 		}
 
 		parts = append(parts, part)
@@ -148,7 +148,7 @@ func (s *sOssAliyun) MultipartPartUpload(ctx context.Context, info *oss_model.Mu
 	// 步骤3：完成分片上传，指定文件读写权限为公共读。
 	cmur, err := bucket.CompleteMultipartUpload(imur, parts, objectAcl)
 	if err != nil {
-		return false, errors.New("分片上传文件失败" + err.Error() + s.category)
+		return false, fmt.Errorf("{#error_oss_aliyun_multipart_upload_failed}")
 	}
 	fmt.Println("cmur:", cmur)
 
@@ -175,6 +175,9 @@ func (s *sOssAliyun) DownloadFile(ctx context.Context, info *oss_model.DownLoadF
 
 	// 下载文件
 	err = bucket.GetObjectToFile(info.ObjectKey, info.FilePath, options...)
+	if err != nil {
+		return false, fmt.Errorf("{#error_oss_aliyun_download_failed}")
+	}
 
 	return err == nil, err
 }
@@ -190,7 +193,7 @@ func (s *sOssAliyun) PartPutDownload(ctx context.Context, info *oss_model.PartPu
 	// 断点续传下载文件(文件key，源文件，分片大小，并发数，是否开启断点续传，断点续传文件)
 	err = bucket.DownloadFile(info.ObjectKey, info.FilePath, info.PartSize, oss.Routines(info.Routines), oss.Checkpoint(info.Checkpoint, info.CheckpointFile))
 	if err != nil {
-		return false, errors.New("断点续传下载文件失败" + err.Error() + s.category)
+		return false, fmt.Errorf("{#error_oss_aliyun_part_download_failed}")
 	}
 
 	return err == nil, err
@@ -207,7 +210,7 @@ func (s *sOssAliyun) GetObject(ctx context.Context, info *oss_model.GetFile) ([]
 	// 获取文件
 	object, err := bucket.GetObject(info.BucketName)
 	if err != nil {
-		return nil, errors.New("获取文件失败" + err.Error() + s.category)
+		return nil, fmt.Errorf("{#error_oss_aliyun_get_file_failed}")
 	}
 	defer object.Close()
 
@@ -215,7 +218,7 @@ func (s *sOssAliyun) GetObject(ctx context.Context, info *oss_model.GetFile) ([]
 	buf := make([]byte, 0)
 	n, err := object.Read(buf)
 	if err != nil || n == 0 {
-		return nil, errors.New("读取文件内容失败" + err.Error() + s.category)
+		return nil, fmt.Errorf("{#error_oss_aliyun_read_file_failed}")
 	}
 
 	fmt.Println(string(buf))
@@ -237,14 +240,14 @@ func (s *sOssAliyun) GetFile(ctx context.Context, info *oss_model.GetFile) ([]by
 	body, err := bucket.SelectObject(info.ObjectKey, selReq)
 
 	if err != nil {
-		return nil, errors.New("查询文件失败" + err.Error() + s.category)
+		return nil, fmt.Errorf("{#error_oss_aliyun_query_file_failed}")
 	}
 
 	// 读取内容。
 	fileInfo, err := ioutil.ReadAll(body)
 
 	if err != nil {
-		return nil, errors.New("文件内容读取失败" + err.Error() + s.category)
+		return nil, fmt.Errorf("{#error_oss_aliyun_read_file_failed}")
 	}
 
 	defer body.Close()
@@ -265,7 +268,7 @@ func (s *sOssAliyun) DeleteFile(ctx context.Context, info oss_model.DeleteFile) 
 	// 删除单个文件。
 	err = bucket.DeleteObject(info.ObjectKey)
 	if err != nil {
-		return false, errors.New("删除单个文件失败" + err.Error() + s.category)
+		return false, fmt.Errorf("{#error_oss_aliyun_delete_file_failed}")
 	}
 
 	return err == nil, err
@@ -282,7 +285,7 @@ func (s *sOssAliyun) DeleteFileList(ctx context.Context, info oss_model.DeleteFi
 	// 删除文件 oss.DeleteObjectsQuiet(true)表示不返回删除结果
 	_, err = bucket.DeleteObjects(info.ObjectKeys)
 	if err != nil {
-		return false, errors.New("删除文件失败" + err.Error() + s.category)
+		return false, fmt.Errorf("{#error_oss_aliyun_delete_files_failed}")
 	}
 
 	return err == nil, err
@@ -313,7 +316,7 @@ func (s *sOssAliyun) QueryFiles(ctx context.Context, info *oss_model.QueryFileLi
 	// 列举文件  指定文件夹：prefix(文件夹名称) Delimiter(不填)
 	lsRes, err := bucket.ListObjectsV2(options...)
 	if err != nil {
-		return nil, errors.New("列举文件失败" + err.Error() + s.category)
+		return nil, fmt.Errorf("{#error_oss_aliyun_list_files_failed}")
 	}
 
 	for _, object := range lsRes.Objects {
@@ -398,7 +401,7 @@ func (s *sOssAliyun) CopyFileToPath(ctx context.Context, info *oss_model.CopyFil
 	// 使用指定的元数据覆盖源文件的元数据。
 	_, err = bucket.CopyObject(info.ObjectName, info.DestObjectName, options...)
 	if err != nil {
-		return false, errors.New("拷贝文件失败" + err.Error() + s.category)
+		return false, fmt.Errorf("{#error_oss_aliyun_copy_file_failed}")
 	}
 
 	return false, nil
@@ -425,7 +428,7 @@ func (s *sOssAliyun) CreateBucket(ctx context.Context, info oss_model.MustInfo) 
 	providerInfo := oss_entity.OssServiceProviderConfig{}
 	err := s.dao.OssServiceProviderConfig.Ctx(ctx).Where(oss_do.OssServiceProviderConfig{Id: info.ProviderId}).Scan(&providerInfo)
 	if err != nil {
-		return nil, errors.New("渠道商id错误，请检查 " + err.Error() + s.dao.OssServiceProviderConfig.Table())
+		return nil, fmt.Errorf("{#error_oss_aliyun_provider_id_error}")
 	}
 
 	// 创建oss客户端
@@ -434,7 +437,7 @@ func (s *sOssAliyun) CreateBucket(ctx context.Context, info oss_model.MustInfo) 
 	// 创建存储空间。
 	bucket, err := client.Bucket(info.BucketName)
 	if err != nil {
-		return nil, errors.New("存储空间创建失败" + err.Error() + s.category)
+		return nil, fmt.Errorf("{#error_oss_aliyun_create_bucket_failed}")
 	}
 
 	return bucket, nil
@@ -453,7 +456,7 @@ func (s *sOssAliyun) GetObjectToFileWithURL(ctx context.Context, info oss_model.
 	// 使用签名URL将OSS文件下载到本地文件。
 	err = bucket.GetObjectToFileWithURL(signedURL, info.FilePath)
 	if err != nil {
-		return false, errors.New("根据文件访问URL下载文件失败了！" + err.Error() + s.category)
+		return false, fmt.Errorf("{#error_oss_aliyun_download_by_url_failed}")
 	}
 
 	return err == nil, err
@@ -479,7 +482,7 @@ func (s *sOssAliyun) GetFileSingURL(ctx context.Context, info *oss_model.GetFile
 	// 生成用于下载的签名URL，并指定签名URL的有效时间为60秒。
 	signedURL, err := bucket.SignURL(objectName, oss.HTTPGet, info.ExpiredInSec, oss.Process(style))
 	if err != nil {
-		return "", errors.New("获取文件的签名访问URL失败:" + err.Error())
+		return "", fmt.Errorf("{#error_oss_aliyun_get_sign_url_failed}")
 	}
 	fmt.Printf("Sign Url:%s\n", signedURL)
 
