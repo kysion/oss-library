@@ -1,0 +1,138 @@
+name: 发布 Go 模块
+
+on:
+    push:
+        branches:
+            - main
+            - dev
+    pull_request:
+        types:
+            - closed
+        branches:
+            - main
+    workflow_dispatch:
+        inputs:
+            version:
+                description: '版本号 (例如: v0.1.0)'
+                required: false
+                type: string
+            type:
+                description: '发布类型'
+                required: true
+                type: choice
+                options:
+                    - patch
+                    - minor
+                    - major
+                default: 'patch'
+
+permissions:
+    contents: write
+    pull-requests: write
+    issues: write
+
+jobs:
+    verify:
+        name: 验证代码
+        runs-on: ubuntu-latest
+        if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.pull_request.merged == true) || github.event_name == 'workflow_dispatch'
+        steps:
+            - name: 检出代码
+              uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
+
+            - name: 设置 Go 环境
+              uses: actions/setup-go@v4
+              with:
+                  go-version: '1.24.1'
+                  cache: true
+
+            - name: 验证依赖
+              run: go mod verify
+
+            - name: 运行测试
+              run: go test -v ./...
+
+    release:
+        name: 发布新版本
+        needs: verify
+        runs-on: ubuntu-latest
+        if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.pull_request.merged == true) || github.event_name == 'workflow_dispatch'
+        steps:
+            - name: 检出代码
+              uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
+
+            - name: 设置 Go 环境
+              uses: actions/setup-go@v4
+              with:
+                  go-version: '1.24.1'
+
+            - name: 获取当前版本
+              id: current_version
+              run: |
+                  CURRENT_VERSION=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.0.0")
+                  echo "current=${CURRENT_VERSION}" >> $GITHUB_OUTPUT
+
+            - name: 计算新版本号
+              id: new_version
+              run: |
+                  if [ -n "${{ github.event.inputs.version }}" ]; then
+                    NEW_VERSION="${{ github.event.inputs.version }}"
+                  else
+                    CURRENT_VERSION=${{ steps.current_version.outputs.current }}
+                    CURRENT_VERSION=${CURRENT_VERSION#v}  # 移除 v 前缀
+                    IFS='.' read -r MAJOR MINOR PATCH <<< "$CURRENT_VERSION"
+                    
+                    case "${{ github.event.inputs.type }}" in
+                      "major")
+                        NEW_VERSION="v$((MAJOR + 1)).0.0"
+                        ;;
+                      "minor")
+                        NEW_VERSION="v${MAJOR}.$((MINOR + 1)).0"
+                        ;;
+                      *)
+                        NEW_VERSION="v${MAJOR}.${MINOR}.$((PATCH + 1))"
+                        ;;
+                    esac
+                  fi
+                  echo "version=${NEW_VERSION}" >> $GITHUB_OUTPUT
+
+            - name: 运行测试
+              run: go test -v ./...
+
+            - name: 创建发布标签
+              run: |
+                  git config --local user.email "action@github.com"
+                  git config --local user.name "GitHub Action"
+                  git tag -a ${{ steps.new_version.outputs.version }} -m "Release ${{ steps.new_version.outputs.version }}"
+                  git push origin ${{ steps.new_version.outputs.version }}
+
+            - name: 创建 Release
+              uses: softprops/action-gh-release@v1
+              with:
+                  tag_name: ${{ steps.new_version.outputs.version }}
+                  name: Release ${{ steps.new_version.outputs.version }}
+                  draft: false
+                  prerelease: false
+                  generate_release_notes: true
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+            - name: 设置 Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: '20'
+
+            - name: 更新 CHANGELOG
+              run: |
+                  npm install -g conventional-changelog-cli
+                  conventional-changelog -p conventionalcommits -i CHANGELOG.md -s -r 0
+
+                  if [[ -n $(git status -s) ]]; then
+                    git add CHANGELOG.md
+                    git commit -m "docs: 更新 CHANGELOG for ${{ steps.new_version.outputs.version }}"
+                    git push
+                  fi
